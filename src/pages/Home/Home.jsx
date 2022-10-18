@@ -1,4 +1,4 @@
-import { Page, Card, DataTable } from "@shopify/polaris";
+import { Page, Card, DataTable, Columns, Text, Button } from "@shopify/polaris";
 
 import React, { useEffect, useState } from "react";
 // import { useStore } from "../../store";
@@ -45,33 +45,82 @@ function Home() {
   }, []);
 
   return (
-    <Page title="Recent Tasks">
-      <Card>
-        <DataTable
-          columnContentTypes={[
-            "text",
-            "numeric",
-            "text",
-            "text",
-            "text",
-            "text",
-            "text",
-            "text",
-          ]}
-          headings={[
-            "Types",
-            "Task ID",
-            "Task Name",
-            "Description",
-            "Status",
-            "Created At",
-            "First Deliverable",
-            "Closed",
-          ]}
-          rows={tasksApi}
-        />
-      </Card>
-    </Page>
+    <>
+      <div style={{ width: "100%", marginTop: "20px" }}>
+        <div
+          style={{ maxWidth: "62.375rem", padding: "1.5rem", margin: "0 auto" }}
+        >
+          <Columns
+            columns={{ xs: 1, sm: "1fr 1fr", md: "1fr 1fr", lg: 2 }}
+            spacing={{ xs: "2" }}
+          >
+            <div>
+              <div>
+                <Text variant="heading2xl" as="h2">
+                  Hey Truong, welcome to CarsonDash!
+                </Text>
+              </div>
+              <div style={{ padding: "15px 0" }}>
+                <Text variant="bodyLg" as="p" color="subdued">
+                  Submit a new task, pick a task from the catalog or subscribe
+                  to submit unlimited tasks!
+                </Text>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <button
+                  className="home-btn"
+                  style={{
+                    background: "#fff",
+                    border: "1px solid #aaa",
+                    marginBottom: "15px",
+                  }}
+                >
+                  Submit a new task
+                </button>
+                <button
+                  className="home-btn"
+                  style={{
+                    background: "#586eca",
+                    border: "1px solid #586eca",
+                    color: "#fff",
+                  }}
+                >
+                  Subscribe & Save
+                </button>
+              </div>
+            </div>
+            <div></div>
+          </Columns>
+        </div>
+      </div>
+      <Page title="Recent Tasks">
+        <Card>
+          <DataTable
+            columnContentTypes={[
+              "text",
+              "numeric",
+              "text",
+              "text",
+              "text",
+              "text",
+              "text",
+              "text",
+            ]}
+            headings={[
+              "Types",
+              "Task ID",
+              "Task Name",
+              "Description",
+              "Status",
+              "Created At",
+              "First Deliverable",
+              "Closed",
+            ]}
+            rows={tasksApi}
+          />
+        </Card>
+      </Page>
+    </>
   );
 }
 

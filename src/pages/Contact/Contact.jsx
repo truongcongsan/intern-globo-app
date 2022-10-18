@@ -91,7 +91,7 @@ function Contact() {
       messeges: "",
     },
     onSubmit: async (values) => {
-      
+      alert(JSON.stringify(values))
       axios
         .post(
           "https://testapi.io/api/anhez/contact-us",
