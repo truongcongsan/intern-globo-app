@@ -64,7 +64,7 @@ export default function Contact() {
 
   return (
     <div style={{ marginBottom: "30px" }}>
-      <Page title="Contact">
+      <Page title="Contact" fullWidth>
         <Form onSubmit={formik.handleSubmit}>
           <FormLayout>
             <Card>

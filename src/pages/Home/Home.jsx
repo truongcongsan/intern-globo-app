@@ -1,4 +1,12 @@
-import { Page, Card, DataTable, Columns, Text, Button } from "@shopify/polaris";
+import {
+  Page,
+  Card,
+  DataTable,
+  Columns,
+  Text,
+  TextStyle,
+  Badge,
+} from "@shopify/polaris";
 
 import React, { useEffect, useState } from "react";
 // import { useStore } from "../../store";
@@ -22,12 +30,30 @@ function Home() {
 
         for (let dataApi of res.data) {
           let tempArray = [
-            dataApi.type,
-            dataApi.id,
-            dataApi.name,
-            dataApi.description,
-            dataApi.status.toString(),
-            moment(dataApi.createdAt).format("DD MMM YYYY"),
+            <div className="table-type">
+              <Badge>
+                <div style={{ color: "#00a0ac" }}>{dataApi.type}</div>
+              </Badge>
+            </div>,
+            <TextStyle variation="strong">#{dataApi.id}</TextStyle>,
+            <>
+              <div style={{ color: "#00a0ac" }}>
+                <TextStyle variation="strong">{dataApi.name}</TextStyle>
+              </div>
+
+              <div style={{ color: "rgba(0,0,0,0.5)", fontWeight: "500" }}>
+                {dataApi.description}
+              </div>
+            </>,
+
+            dataApi.status ? (
+              <Badge status="success" progress="complete">
+                active
+              </Badge>
+            ) : (
+              <Badge status="warning">cancelled</Badge>
+            ),
+
             moment(dataApi.first_deliverable).format("DD MMM YYYY"),
             moment(dataApi.closed).format("DD MMM YYYY"),
           ];
@@ -93,33 +119,31 @@ function Home() {
           </Columns>
         </div>
       </div>
-      <Page title="Recent Tasks">
-        <Card>
-          <DataTable
-            columnContentTypes={[
-              "text",
-              "numeric",
-              "text",
-              "text",
-              "text",
-              "text",
-              "text",
-              "text",
-            ]}
-            headings={[
-              "Types",
-              "Task ID",
-              "Task Name",
-              "Description",
-              "Status",
-              "Created At",
-              "First Deliverable",
-              "Closed",
-            ]}
-            rows={tasksApi}
-          />
-        </Card>
-      </Page>
+      <div style={{ marginBottom: "30px" }}>
+        <Page title="Recent Tasks" fullWidth>
+          <Card>
+            <DataTable
+              columnContentTypes={[
+                "text",
+                "text",
+                "text",
+                "text",
+                "text",
+                "text",
+              ]}
+              headings={[
+                "Types",
+                "Task ID",
+                "Task Name",
+                "Status",
+                "First Deliverable",
+                "Closed",
+              ]}
+              rows={tasksApi}
+            />
+          </Card>
+        </Page>
+      </div>
     </>
   );
 }
