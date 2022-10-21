@@ -1,186 +1,147 @@
-import { Button, Card, Page } from "@shopify/polaris";
-import { useFormik, FormikProvider, Form, useField } from "formik";
+import React, { useCallback, useState } from "react";
+import {
+  Button,
+  Form,
+  FormLayout,
+  Page,
+  Card,
+  Spinner,
+  TextContainer,
+  TextField,
+  TextStyle,
+} from "@shopify/polaris";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import React from "react";
-
 import axios from "axios";
 
-const TextInputLiveFeedback = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
+let SignupSchema = Yup.object().shape({
+  subject: Yup.string()
+    .min(5, "Must be at least 5 characters.")
+    .max(50, "Must be less  than 50 characters.")
+    .required("Subject is required."),
+  messege: Yup.string()
+    .min(5, "Must be at least 5 characters.")
+    .max(300, "Must be less  than 300 characters.")
+    .required("Messege is required."),
+  email: Yup.string().email("Invalid email").required("Required"),
+});
 
-  // Show inline feedback if EITHER
-  // - the input is focused AND value is longer than 2 characters
-  // - or, the has been visited (touched === true)
-  const [didFocus, setDidFocus] = React.useState(false);
-  const handleFocus = () => setDidFocus(true);
-  const showFeedback =
-    (!!didFocus && field.value.trim().length > 2) || meta.touched;
-
-  return (
-    <div
-      className={`form-control ${
-        showFeedback ? (meta.error ? "invalid" : "valid") : ""
-      }`}
-    >
-      <div className="flex items-center space-between">
-        <label htmlFor={props.id}>{label}</label>{" "}
-        {showFeedback ? (
-          <div
-            id={`${props.id}-feedback`}
-            aria-live="polite"
-            className="feedback text-sm"
-          >
-            {meta.error ? meta.error : "✓"}
-          </div>
-        ) : null}
-      </div>
-      <input
-        {...props}
-        {...field}
-        aria-describedby={`${props.id}-feedback ${props.id}-help`}
-        onFocus={handleFocus}
-      />
-    </div>
-  );
-};
-
-const TextAreaLiveFeedback = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
-
-  // Show inline feedback if EITHER
-  // - the input is focused AND value is longer than 2 characters
-  // - or, the has been visited (touched === true)
-  const [didFocus, setDidFocus] = React.useState(false);
-  const handleFocus = () => setDidFocus(true);
-  const showFeedback =
-    (!!didFocus && field.value.trim().length > 2) || meta.touched;
-
-  return (
-    <div
-      className={`form-control ${
-        showFeedback ? (meta.error ? "invalid" : "valid") : ""
-      }`}
-    >
-      <div className="flex items-center space-between">
-        <label htmlFor={props.id}>{label}</label>{" "}
-        {showFeedback ? (
-          <div
-            id={`${props.id}-feedback`}
-            aria-live="polite"
-            className="feedback text-sm"
-          >
-            {meta.error ? meta.error : "✓"}
-          </div>
-        ) : null}
-      </div>
-      <textarea
-        {...props}
-        {...field}
-        aria-describedby={`${props.id}-feedback ${props.id}-help`}
-        onFocus={handleFocus}
-      />
-    </div>
-  );
-};
-
-function Contact() {
+export default function Contact() {
+  const [msgAlert, setMsgAlert] = useState("");
+  const [isMsgAlert, setIsMsgAlert] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
       email: "",
       subject: "",
-      messeges: "",
+      messege: "",
     },
+    validationSchema: SignupSchema,
     onSubmit: async (values) => {
-      alert(JSON.stringify(values))
+      setIsLoading(true);
       axios
-        .post(
-          "https://testapi.io/api/anhez/contact-us",
-          values,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        )
+        .post("https://testapi.io/api/anhez/contact-us", values, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then((res) => {
-          console.log(res);
+          setMsgAlert(res.data.msg);
         })
         .catch((err) => {
           console.log(err);
         });
+      setTimeout(() => {
+        setIsLoading(false);
+        setIsMsgAlert(true);
+      }, 1000);
     },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .min(5, "Must be at least 5 characters.")
-        .max(100, "Must be less  than 100 characters.")
-        .required("Email is required.")
-        .matches(
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-          "Please enter correct email format."
-        ),
-      subject: Yup.string()
-        .min(1, "Must be at least 1 characters.")
-        .max(50, "Must be less  than 50 characters.")
-        .required("Subject is required."),
-      messeges: Yup.string()
-        .min(1, "Must be at least 1 characters.")
-        .max(300, "Must be less  than 300 characters.")
-        .required("Messeges is required."),
-    }),
   });
+  const handleChange = (value, id) => {
+    formik.setFieldValue(id, value);
+  };
+  const { values, errors, touched } = formik;
 
   return (
-    <Page title="Contact">
-      <FormikProvider value={formik}>
-        <Form>
-          <Card>
-            <Card.Section>
-              <p>
-                Don't hesitate to contact us if you face any problem or have any
-                question about the app. We are happy to help you.
-              </p>
-              <p>
-                Please give us permisstion to access your Shopify Admin. So we
-                could support you quickly. We need to access{" "}
-                <span className="contact-intro-bold">Apps</span> and{" "}
-                <span className="contact-intro-bold">
-                  Online Store &rarr; Themes.{" "}
-                </span>
-                Our email address for creating staff account is:{" "}
-                <span className="contact-intro-bold">
-                  contact@globosoftware.net
-                </span>
-              </p>
-            </Card.Section>
-            <Card.Section>
-              <TextInputLiveFeedback
-                type="text"
-                label="Your email"
-                id="email"
-                name="email"
-              />
-              <TextInputLiveFeedback
-                type="text"
-                label="Subject"
-                id="subject"
-                name="subject"
-              />
-              <TextAreaLiveFeedback
-                label="Messeges"
-                id="messeges"
-                name="messeges"
-              />
-            </Card.Section>
-            <Card.Section>
-              <Button submit primary>
-                Send
-              </Button>
-            </Card.Section>
-          </Card>
+    <div style={{ marginBottom: "30px" }}>
+      <Page title="Contact">
+        <Form onSubmit={formik.handleSubmit}>
+          <FormLayout>
+            <Card>
+              <Card.Section>
+                {isMsgAlert && (
+                  <TextContainer>
+                    <TextStyle variation="strong">
+                      <TextStyle variation="positive">{msgAlert}</TextStyle>
+                    </TextStyle>
+                  </TextContainer>
+                )}
+                {!isMsgAlert && (
+                  <TextContainer>
+                    <p>
+                      Don't hesitate to contact us if you face any problem or
+                      have any question about the app. We are happy to help you.
+                    </p>
+                    <p>
+                      Please give us permisstion to access your Shopify Admin.
+                      So we could support you quickly. We need to access{" "}
+                      <TextStyle variation="strong">Apps</TextStyle> and{" "}
+                      <TextStyle variation="strong">
+                        Online Store &rarr; Themes.{" "}
+                      </TextStyle>
+                      Our email address for creating staff account is:{" "}
+                      <TextStyle variation="strong">
+                        contact@globosoftware.net
+                      </TextStyle>
+                    </p>
+                  </TextContainer>
+                )}
+              </Card.Section>
+              <Card.Section>
+                <TextField
+                  value={values.email}
+                  onChange={handleChange}
+                  label="Your email"
+                  type="email"
+                  autoComplete="email"
+                  id="email"
+                  error={touched.email && errors.email}
+                />
+                <TextField
+                  value={values.subject}
+                  onChange={handleChange}
+                  label="Your subject"
+                  type="text"
+                  id="subject"
+                  error={touched.subject && errors.subject}
+                />
+                <TextField
+                  value={values.messege}
+                  onChange={handleChange}
+                  label="Your messege"
+                  type="text"
+                  id="messege"
+                  error={touched.messege && errors.messege}
+                  multiline={4}
+                />
+              </Card.Section>
+              <Card.Section>
+                <Button submit disabled={isLoading} primary>
+                  {isLoading && (
+                    <div className="btn-loading">
+                      <Spinner
+                        accessibilityLabel="Small spinner example"
+                        size="small"
+                      />
+                    </div>
+                  )}
+                  {!isLoading && <div className="btn-loading">Submit</div>}
+                </Button>
+              </Card.Section>
+            </Card>
+          </FormLayout>
         </Form>
-      </FormikProvider>
-    </Page>
+      </Page>
+    </div>
   );
 }
-
-export default Contact;
