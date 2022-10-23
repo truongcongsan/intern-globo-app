@@ -3,6 +3,7 @@ import {
   ArrowLeftMinor,
   NotificationMajor,
   CaretDownMinor,
+  CirclePlusOutlineMinor
 } from "@shopify/polaris-icons";
 
 import React, { useState, useCallback } from "react";
@@ -38,9 +39,8 @@ function AppTopBar(props) {
         open={isUserMenuOpen}
         onToggle={toggleIsUserMenuOpen}
       />
-      <Button plain>
-        <Icon source={CaretDownMinor} color="base" />
-      </Button>
+
+      <Icon source={CaretDownMinor} color="base" />
     </div>
   );
 
@@ -52,6 +52,10 @@ function AppTopBar(props) {
         alignItems: "center",
       }}
     >
+      <div className="avaiable-credit">
+        <div>Avaiable credit: 4</div>
+        <Icon source={CirclePlusOutlineMinor} color="base" />
+      </div>
       <Button onClick={() => {}}>Submit a new task</Button>
       <TopBar.Menu
         activatorContent={

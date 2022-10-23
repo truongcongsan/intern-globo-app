@@ -18,9 +18,39 @@
   background-color: #72e8b8;
 }
 
+.Polaris-Scrollable--verticalHasScrolling {
+  .nav-settings {
+    position: static;
+  }
+}
 .nav-settings {
   position: absolute;
   bottom: 5%;
+}
+
+.Polaris-DataTable__Cell--header {
+  font-weight: 500 !important;
+  font-size: 17px;
+}
+
+.home-wrapper-bg {
+  background-image: none !important;
+}
+
+.home-wrapper {
+  background-image: url("../public/imgs/home-banner.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: right;
+  min-height: 600px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.home-columns {
+  padding: 3rem;
+  margin: 0 auto;
+  min-height: 600px;
 }
 
 .home-btn {
@@ -30,6 +60,80 @@
   cursor: pointer;
   font-weight: 500;
   font-size: 16px;
+}
+
+.table-sekeleton {
+  margin-bottom: 20px;
+}
+
+.table-sekeleton .Polaris-SkeletonDisplayText__DisplayText {
+  max-width: 100% !important;
+}
+
+@media only screen and (max-width: 2050px) {
+  .home-wrapper {
+    min-height: 700px;
+  }
+  .home-columns {
+    min-height: 700px;
+    .Polaris-Columns {
+      .home-column-1 {
+        margin-top: 180px;
+        margin-left: 100px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1600px) {
+  .home-wrapper {
+    min-height: 500px;
+  }
+  .home-columns {
+    min-height: 500px;
+    .Polaris-Columns {
+      .home-column-1 {
+        margin-top: 150px;
+        margin-left: 80px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .home-wrapper {
+    min-height: 400px;
+  }
+  .home-columns {
+    min-height: 400px;
+    .Polaris-Columns {
+      .home-column-1 {
+        margin-top: 30px;
+        margin-left: 50px;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 1200px) {
+  .home-wrapper {
+    min-height: 300px;
+  }
+  .home-columns {
+    min-height: 300px;
+    .Polaris-Columns {
+      .home-column-1 {
+        margin-left: 0px;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 415px) {
+  .home-columns {
+    padding: 2rem;
+  }
+  .avaiable-credit {
+    display: none !important;
+  }
 }
 
 .table-type .Polaris-Badge {
@@ -42,4 +146,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.avaiable-credit {
+  display: flex;
+  margin-right: 15px;
+  div {
+    width: max-content;
+    margin-right: 10px;
+    font-weight: 500;
+  }
 }
